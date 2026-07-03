@@ -14,7 +14,7 @@ from fastapi.testclient import TestClient
 
 @pytest.fixture(scope="module")
 def client():
-    """Module-scoped client — patches applied for all tests in this file."""
+    """Module-scoped client, patches applied for all tests in this file."""
     with (
         patch("src.api.db_utils.create_application_logs"),
         patch("src.api.db_utils.create_document_store"),
@@ -37,7 +37,7 @@ def mock_upload_file(tmp_path):
 
 
 def test_health_check(client):
-    """Test /health endpoint — no auth required."""
+    """Test /health endpoint, no auth required."""
     response = client.get("/health")
     assert response.status_code == 200
     assert response.json()["status"] == "healthy"

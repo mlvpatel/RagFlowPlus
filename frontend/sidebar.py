@@ -1,5 +1,5 @@
 """
-Sidebar component — document management panel.
+Sidebar component, document management panel.
 Author: Malav Patel
 """
 

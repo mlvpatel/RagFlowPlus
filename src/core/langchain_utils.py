@@ -29,7 +29,7 @@ from retrieval.retrievers import ReRankingRetriever, VectorRetriever
 logger = logging.getLogger(__name__)
 
 # ============================================
-# Base retriever — vector similarity (k=5 for good recall)
+# Base retriever, vector similarity (k=5 for good recall)
 # ============================================
 _base_retriever = VectorRetriever(vectorstore=vectorstore, k=5)
 
@@ -71,7 +71,7 @@ qa_prompt = ChatPromptTemplate.from_messages(
 
 
 # ============================================
-# Lazy CrossEncoder — downloaded only on first real call
+# Lazy CrossEncoder, downloaded only on first real call
 # ============================================
 @functools.lru_cache(maxsize=1)
 def _get_cross_encoder():

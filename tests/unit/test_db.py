@@ -1,5 +1,5 @@
 """
-Unit tests for db_utils — using an in-memory SQLite database.
+Unit tests for db_utils, using an in-memory SQLite database.
 Tests run fully isolated with no real rag_app.db touched.
 
 Author: Malav Patel

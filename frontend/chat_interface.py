@@ -42,9 +42,9 @@ def display_chat_interface():
                 col1, col2 = st.columns(2)
                 with col1:
                     st.caption("Model")
-                    st.code(response.get("model", "—"))
+                    st.code(response.get("model", "-"))
                 with col2:
                     st.caption("Session ID")
-                    st.code(response.get("session_id", "—"))
+                    st.code(response.get("session_id", "-"))
         else:
             st.error("Failed to get a response. Check the API is running and your API key is set.")

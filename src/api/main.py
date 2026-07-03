@@ -1,5 +1,5 @@
 """
-RAGFlow API Server — v1
+RAGFlow API Server, v1
 
 Author: Malav Patel
 Email: malav.patel203@gmail.com
@@ -50,7 +50,7 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-# CORS — configure allowed origins via ALLOWED_ORIGINS env var
+# CORS, configure allowed origins via ALLOWED_ORIGINS env var
 _raw_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:8501")
 allowed_origins = [o.strip() for o in _raw_origins.split(",") if o.strip()]
 
@@ -96,7 +96,7 @@ async def log_requests(request: Request, call_next):
 # ============================================
 @app.get("/health", tags=["System"])
 def health_check():
-    """Deep liveness probe — checks Chroma and Redis connectivity."""
+    """Deep liveness probe, checks Chroma and Redis connectivity."""
     import redis as redis_lib
 
     from src.embeddings.chroma_utils import vectorstore
@@ -124,7 +124,7 @@ def health_check():
 
 
 # ============================================
-# v1 Router — all business routes
+# v1 Router, all business routes
 # ============================================
 v1 = APIRouter(prefix="/v1", dependencies=[Depends(verify_api_key)])
 

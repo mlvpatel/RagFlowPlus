@@ -21,9 +21,9 @@ def test_reciprocal_rank_fusion():
     list1 = [Document(page_content="A"), Document(page_content="B")]
     list2 = [Document(page_content="B"), Document(page_content="A")]
 
-    # A: rank 0 in list1, rank 1 in list2   → score = 1/61 + 1/62
-    # B: rank 1 in list1, rank 0 in list2   → score = 1/62 + 1/61
-    # Both equal — result order is non-deterministic
+    # A: rank 0 in list1, rank 1 in list2   to score = 1/61 + 1/62
+    # B: rank 1 in list1, rank 0 in list2   to score = 1/62 + 1/61
+    # Both equal, result order is non-deterministic
     fused = reciprocal_rank_fusion([list1, list2])
     assert len(fused) == 2
     assert fused[0].page_content in ["A", "B"]

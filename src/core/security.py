@@ -11,7 +11,7 @@ from slowapi import Limiter
 from slowapi.util import get_remote_address
 
 # ============================================
-# Rate Limiter — Redis-backed for multi-replica safety
+# Rate Limiter, Redis-backed for multi-replica safety
 # ============================================
 redis_url = os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0")
 
@@ -38,7 +38,7 @@ async def verify_api_key(api_key: str = Security(_api_key_header)) -> str:
     so developers don't need a key. Set API_KEY in production.
     """
     if not _API_KEY:
-        # No API_KEY configured — open access (dev mode)
+        # No API_KEY configured, open access (dev mode)
         return "dev"
     if api_key != _API_KEY:
         raise HTTPException(

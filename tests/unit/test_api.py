@@ -63,7 +63,7 @@ def client():
 
 class TestHealth:
     def test_health_returns_200(self, client):
-        """Health endpoint must always be reachable — no auth required."""
+        """Health endpoint must always be reachable, no auth required."""
         resp = client.get("/health")
         assert resp.status_code == 200
         assert resp.json()["status"] == "healthy"

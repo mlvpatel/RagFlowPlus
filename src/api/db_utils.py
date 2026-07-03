@@ -1,5 +1,5 @@
 """
-Database utilities for RAGFlow — SQLite with WAL mode.
+Database utilities for RAGFlow, SQLite with WAL mode.
 Author: Malav Patel
 """
 

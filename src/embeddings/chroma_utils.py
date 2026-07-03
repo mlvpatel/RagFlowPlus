@@ -1,5 +1,5 @@
 """
-Embedding utilities — ChromaDB + Google Gemini Embedding 2 (text-embedding-004).
+Embedding utilities, ChromaDB + Google Gemini Embedding 2 (text-embedding-004).
 Author: Malav Patel
 """
 
@@ -31,7 +31,7 @@ text_splitter = RecursiveCharacterTextSplitter(
 )
 
 # ============================================
-# Gemini Embedding 2 — text-embedding-004
+# Gemini Embedding 2, text-embedding-004
 # Uses different task_types for index vs query for best accuracy.
 # Indexing task_type is set here; the retriever uses "retrieval_query".
 # ============================================
@@ -53,7 +53,7 @@ query_embedding_function = GoogleGenerativeAIEmbeddings(
 )
 
 # ============================================
-# ChromaDB — HTTP client-server (Docker) or local persistence (dev)
+# ChromaDB, HTTP client-server (Docker) or local persistence (dev)
 # ============================================
 chroma_host = os.getenv("CHROMA_HOST")
 chroma_port = os.getenv("CHROMA_PORT", "8000")

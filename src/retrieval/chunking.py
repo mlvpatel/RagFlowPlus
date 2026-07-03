@@ -19,7 +19,7 @@ class SmartChunker:
     before splitting. For now, the recursive strategy is production-safe and
     well-tested.
 
-    Rename history: was SemanticChunker — renamed SmartChunker to avoid
+    Rename history: was SemanticChunker, renamed SmartChunker to avoid
     implying semantic boundaries are computed (they are not yet).
     """
 

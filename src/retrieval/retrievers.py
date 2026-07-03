@@ -89,7 +89,7 @@ class VectorRetriever(BaseRetriever):
                 if bm25_docs:
                     fused = reciprocal_rank_fusion([vector_docs, bm25_docs])
                     logger.debug(
-                        f"Hybrid RRF: {len(vector_docs)} vector + {len(bm25_docs)} BM25 → {len(fused)} fused"
+                        f"Hybrid RRF: {len(vector_docs)} vector + {len(bm25_docs)} BM25 to {len(fused)} fused"
                     )
                     return fused[: self.k]
         except Exception as e:

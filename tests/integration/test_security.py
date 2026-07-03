@@ -1,5 +1,5 @@
 """
-Integration security tests — input sanitization and rate limiting.
+Integration security tests, input sanitization and rate limiting.
 Updated to use /v1/ route prefix.
 Author: Malav Patel
 """

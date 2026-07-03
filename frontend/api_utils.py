@@ -1,5 +1,5 @@
 """
-Frontend API utilities — all calls go through the v1 router.
+Frontend API utilities, all calls go through the v1 router.
 Author: Malav Patel
 """
 
@@ -42,7 +42,7 @@ def get_api_response(question: str, session_id: str, model: str) -> dict | None:
             return resp.json()
         st.error(f"Chat API error {resp.status_code}: {resp.text}")
     except requests.exceptions.Timeout:
-        st.error("Request timed out. The model may be loading — please retry.")
+        st.error("Request timed out. The model may be loading, please retry.")
     except Exception as e:
         st.error(f"An error occurred: {e}")
     return None

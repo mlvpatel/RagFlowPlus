@@ -2,7 +2,6 @@
 RAGFlow API Server, v1
 
 Author: Malav Patel
-Email: malav.patel203@gmail.com
 """
 
 from dotenv import load_dotenv

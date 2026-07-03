@@ -484,7 +484,7 @@ This project is licensed under the **MIT License**, see [LICENSE](LICENSE) for d
 ## Author
 
 **Malav Patel**  
-📧 malav.patel203@gmail.com  
+GitHub @mlvpatel  
 🐙 GitHub: [@mlvpatel](https://github.com/mlvpatel)  
 🔗 Repository: [github.com/mlvpatel/RagFlow](https://github.com/mlvpatel/RagFlow)
 

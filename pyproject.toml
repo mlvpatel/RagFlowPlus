@@ -10,7 +10,7 @@ readme = "README.md"
 license = {file = "LICENSE"}
 requires-python = ">=3.10"
 authors = [
-    {name = "Malav Patel", email = "malav.patel203@gmail.com"}
+    {name = "Malav Patel"}
 ]
 keywords = [
     "rag", "retrieval-augmented-generation", "langchain", "chatbot",

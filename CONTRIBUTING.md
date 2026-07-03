@@ -39,5 +39,5 @@ cp .env.example .env
 
 ## Questions?
 
-Open an issue or contact: **malav.patel203@gmail.com**  
+Open an issue or contact: **@mlvpatel on GitHub**  
 GitHub: [@mlvpatel](https://github.com/mlvpatel)

@@ -8,12 +8,29 @@ RagFlowPlus lets you upload documents and ask questions about them. It retrieves
 
 [![CI](https://github.com/mlvpatel/RagFlowPlus/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/mlvpatel/RagFlowPlus/actions/workflows/ci-cd.yml) ![Python](https://img.shields.io/badge/python-3.11-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-async-green) ![License](https://img.shields.io/badge/license-MIT-green)
 
+![RagFlowPlus answering a document question live on a local model](assets/videos/ragflowplus-demo.gif)
+
+The clip above is a live, unedited run on a local llama3.2 model with the bundled sample data, including a real SEC 10-K, indexed in Chroma. No paid keys were used. Full recording at [assets/videos/ragflowplus-demo.webm](assets/videos/ragflowplus-demo.webm), screenshot at [assets/screenshots/ragflowplus-ui.png](assets/screenshots/ragflowplus-ui.png).
+
+## Try it with the bundled sample data
+
+The repo ships with sample documents in [sample_data](sample_data), an HR handbook, a product FAQ, and a real SEC 10-K excerpt, so you can run and judge the system without your own files. Fully local and keyless with Ollama:
+
+```bash
+ollama serve &
+ollama pull nomic-embed-text
+ollama pull llama3.2:3b
+EMBEDDING_PROVIDER=ollama python scripts/load_sample_data.py
+```
+
+Then start the API and UI and ask the questions in [sample_data/README.md](sample_data/README.md), including an honesty check where it should decline rather than guess.
+
 ## Features
 
 | Area | Capability |
 |---|---|
 | Documents | PDF, DOCX, HTML, TXT, Markdown |
-| Embeddings | Google text-embedding-004 |
+| Embeddings | Google text-embedding-004, or local Ollama nomic-embed-text |
 | Retrieval | Dense ChromaDB search plus BM25, fused with Reciprocal Rank Fusion |
 | Reranking | Cross encoder ms-marco-MiniLM-L-6-v2 on top of the fused results |
 | Memory | Multi turn conversations stored in SQLite |

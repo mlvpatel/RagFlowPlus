@@ -21,6 +21,7 @@ def display_sidebar():
         "gpt-4o",
         "claude-3-7-sonnet-20250219",
         "deepseek-r1",
+        "llama3.2:3b",
         "llama3",
     ]
     st.sidebar.selectbox("🤖 Select Model", options=model_options, key="model")

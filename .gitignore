@@ -20,6 +20,8 @@ env/
 
 # Data, never commit live DBs or uploaded files
 rag_app.db
+rag_app.db-shm
+rag_app.db-wal
 chroma_db/
 data/chroma_db/
 data/uploads/

@@ -14,6 +14,7 @@ class ModelName(str, Enum):
     CLAUDE_3_7_SONNET = "claude-3-7-sonnet-20250219"  # Latest Claude (March 2026)
     CLAUDE_3_5_SONNET = "claude-3-5-sonnet-20241022"  # Previous Claude (kept for compat)
     DEEPSEEK_R1 = "deepseek-r1"
+    LLAMA_3_2 = "llama3.2:3b"
     LLAMA_3 = "llama3"
 
 

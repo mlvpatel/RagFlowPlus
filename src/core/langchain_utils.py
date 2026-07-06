@@ -12,11 +12,10 @@ import logging
 import os
 import sys
 
-from langchain.chains import create_history_aware_retriever, create_retrieval_chain
-from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_anthropic import ChatAnthropic
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.runnables import RunnableLambda
 from langchain_ollama import ChatOllama
 from langchain_openai import ChatOpenAI
 
@@ -96,26 +95,44 @@ def _get_final_retriever() -> ReRankingRetriever:
 # ============================================
 # RAG chain factory
 # ============================================
+def _make_llm(model: str):
+    if "claude" in model:
+        return ChatAnthropic(model=model)
+    if "deepseek" in model or "llama" in model:
+        ollama_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+        return ChatOllama(model=model, base_url=ollama_url)
+    return ChatOpenAI(model=model)
+
+
 def get_rag_chain(model: str = "gpt-4o-mini"):
     """
-    Build and return a history-aware RAG chain for the given model.
+    Build a history aware RAG chain for the given model, using LCEL.
 
-    Supports:
-      - OpenAI (gpt-4o, gpt-4o-mini, etc.)
-      - Anthropic Claude (claude-3-5-sonnet-*)
-      - Local via Ollama (deepseek-r1, llama3, etc.)
+    Behaviour matches the classic retrieval chain: when chat history is present
+    the question is first reformulated into a standalone query, then the
+    reranking retriever fetches context and the model answers. Invoke with
+    {"input": ..., "chat_history": [...]} and read the "answer" key.
+
+    Supports OpenAI, Anthropic Claude, and local Ollama (deepseek, llama).
     """
-    if "claude" in model:
-        llm = ChatAnthropic(model=model)
-    elif "deepseek" in model or "llama" in model:
-        ollama_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-        llm = ChatOllama(model=model, base_url=ollama_url)
-    else:
-        llm = ChatOpenAI(model=model)
-
+    llm = _make_llm(model)
     final_retriever = _get_final_retriever()
-    history_aware_retriever = create_history_aware_retriever(
-        llm, final_retriever, contextualize_q_prompt
-    )
-    question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
-    return create_retrieval_chain(history_aware_retriever, question_answer_chain)
+    reformulate = contextualize_q_prompt | llm | StrOutputParser()
+    answer_chain = qa_prompt | llm | StrOutputParser()
+
+    def _run(inputs: dict) -> dict:
+        history = inputs.get("chat_history") or []
+        question = inputs["input"]
+        search_query = (
+            reformulate.invoke({"input": question, "chat_history": history})
+            if history
+            else question
+        )
+        docs = final_retriever.invoke(search_query)
+        context = "\n\n".join(d.page_content for d in docs)
+        answer = answer_chain.invoke(
+            {"context": context, "chat_history": history, "input": question}
+        )
+        return {"answer": answer, "context": docs, "input": question}
+
+    return RunnableLambda(_run)

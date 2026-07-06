@@ -13,13 +13,13 @@ from frontend.chat_interface import display_chat_interface
 from frontend.sidebar import display_sidebar
 
 st.set_page_config(
-    page_title="RAGFlow, AI Document Chat",
+    page_title="RagFlowPlus, AI Document Chat",
     page_icon="🔍",
     layout="wide",
 )
 
-st.title("🔍 RAGFlow, Chat with Your Documents")
-st.caption("Powered by Gemini Embedding 2 · Retrieval-Augmented Generation")
+st.title("🔍 RagFlowPlus, Chat with Your Documents")
+st.caption("Advanced RAG, 2023. Hybrid retrieval with cross encoder reranking.")
 
 # ── Initialise session state defaults ─────────────────────────────────────
 st.session_state.setdefault("messages", [])

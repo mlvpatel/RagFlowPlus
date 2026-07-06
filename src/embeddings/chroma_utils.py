@@ -15,7 +15,6 @@ from typing import List
 from langchain_chroma import Chroma
 from langchain_community.document_loaders import Docx2txtLoader, PyPDFLoader, UnstructuredHTMLLoader
 from langchain_core.documents import Document
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from tenacity import before_sleep_log, retry, stop_after_attempt, wait_exponential
 
@@ -30,27 +29,38 @@ text_splitter = RecursiveCharacterTextSplitter(
     length_function=len,
 )
 
+
 # ============================================
 # Gemini Embedding 2, text-embedding-004
 # Uses different task_types for index vs query for best accuracy.
 # Indexing task_type is set here; the retriever uses "retrieval_query".
 # ============================================
-_google_api_key = os.getenv("GOOGLE_API_KEY")
-if not _google_api_key:
-    logger.warning("GOOGLE_API_KEY is not set. Embedding calls will fail.")
+# Provider switch: Google Gemini by default, or local Ollama for a keyless run
+# (set EMBEDDING_PROVIDER=ollama). The retrieval technique is unchanged, this
+# only swaps where the vectors come from.
+def _build_embeddings(task_type: str):
+    provider = os.getenv("EMBEDDING_PROVIDER", "google").lower()
+    if provider == "ollama":
+        from langchain_ollama import OllamaEmbeddings
 
-embedding_function = GoogleGenerativeAIEmbeddings(
-    model="models/text-embedding-004",
-    google_api_key=_google_api_key,
-    task_type="retrieval_document",  # best for indexing documents
-)
+        return OllamaEmbeddings(
+            model=os.getenv("OLLAMA_EMBEDDING_MODEL", "nomic-embed-text"),
+            base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
+        )
+    from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
+    if not os.getenv("GOOGLE_API_KEY"):
+        logger.warning("GOOGLE_API_KEY is not set. Google embedding calls will fail.")
+    return GoogleGenerativeAIEmbeddings(
+        model="models/text-embedding-004",
+        google_api_key=os.getenv("GOOGLE_API_KEY"),
+        task_type=task_type,
+    )
+
+
+embedding_function = _build_embeddings("retrieval_document")
 # Query-time embedding (different task type for better retrieval accuracy)
-query_embedding_function = GoogleGenerativeAIEmbeddings(
-    model="models/text-embedding-004",
-    google_api_key=_google_api_key,
-    task_type="retrieval_query",  # best for embedding user queries
-)
+query_embedding_function = _build_embeddings("retrieval_query")
 
 # ============================================
 # ChromaDB, HTTP client-server (Docker) or local persistence (dev)

@@ -26,5 +26,8 @@ jobs:
           pip install -r requirements.txt
 
       - name: Python Dependency Scan (pip-audit)
-        # PYSEC-2026-311 is a chromadb advisory with no patched release yet.
+        # PYSEC-2026-311 is a chromadb server side advisory with no patched
+        # release. Not exposed here: embedded mode runs no server, and the
+        # optional Docker server pins 0.6.3, below the affected range. See
+        # SECURITY.md for the full rationale.
         run: pip-audit --ignore-vuln PYSEC-2026-311

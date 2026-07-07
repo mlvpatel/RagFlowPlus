@@ -115,13 +115,15 @@ RagFlowPlus is one rung in a year by year line of enterprise RAG systems, each a
 
 | Year | Repository | Generation |
 |---|---|---|
-| 2022 | RagFlow | Naive RAG, single dense retrieval |
+| 2022 | [RagFlow](https://github.com/mlvpatel/RagFlow) | Naive RAG, single dense retrieval |
 | 2023 | RagFlowPlus, this repo | Advanced RAG, hybrid retrieval and reranking |
 | 2024 | [RagFlowPro](https://github.com/mlvpatel/RagFlowPro) | Modular production RAG, pgvector, streaming, evaluation |
-| 2025 | RagFlowProPlus, RagFlowKAG | Agentic RAG, knowledge graph with reasoning |
-| 2026 | RagFlowProMax, UltimateRAG | Multi agent enterprise, multimodal |
+| 2025 | [RagFlowProPlus](https://github.com/mlvpatel/RagFlowProPlus), RagFlowKAG | Agentic RAG, knowledge graph with reasoning |
+| 2026 | [RagFlowProMax](https://github.com/mlvpatel/RagFlowProMax), UltimateRAG | Multi agent enterprise, multimodal |
 
 The next rung up, [RagFlowPro](https://github.com/mlvpatel/RagFlowPro), replaces ChromaDB with pgvector on Postgres, moves memory to Postgres, computes hybrid retrieval in a single SQL query, streams answers, and adds a measurable evaluation harness.
+
+Every rung is measured on the same golden questions, keyless, in the [rag-catalog](https://github.com/mlvpatel/rag-catalog) hub.
 
 ## License
 

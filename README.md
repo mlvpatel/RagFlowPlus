@@ -2,7 +2,7 @@
 
 **Advanced retrieval augmented generation for question answering over your own documents, with hybrid retrieval and cross encoder reranking.**
 
-**Part of the RagFlow line, enterprise RAG built year by year. This repository is RagFlowPlus, Advanced RAG, 2023.** See [the full line](#the-ragflow-line) below.
+**Part of the RagFlow line, a series of reference enterprise RAG implementations. This repository is RagFlowPlus, Advanced RAG.** See [the full line](#the-ragflow-line) below.
 
 RagFlowPlus lets you upload documents and ask questions about them. It retrieves the relevant passages with hybrid dense and keyword search, reranks them with a cross encoder, sends the best context to a language model, and returns a grounded answer while remembering the conversation. It runs on FastAPI with a Streamlit chat interface and packages the whole stack with Docker.
 
@@ -111,7 +111,7 @@ Python, FastAPI, Streamlit, LangChain, ChromaDB, SQLite, Celery, Redis, Promethe
 
 ## The RagFlow line
 
-RagFlowPlus is one rung in a year by year line of enterprise RAG systems, each a faithful snapshot of the best production RAG of its year.
+RagFlowPlus is one implementation in the RagFlow line, a series demonstrating distinct enterprise RAG retrieval strategies.
 
 | Year | Repository | Generation |
 |---|---|---|
@@ -121,9 +121,9 @@ RagFlowPlus is one rung in a year by year line of enterprise RAG systems, each a
 | 2025 | [RagFlowProPlus](https://github.com/mlvpatel/RagFlowProPlus), RagFlowKAG | Agentic RAG, knowledge graph with reasoning |
 | 2026 | [RagFlowProMax](https://github.com/mlvpatel/RagFlowProMax), UltimateRAG | Multi agent enterprise, multimodal |
 
-The next rung up, [RagFlowPro](https://github.com/mlvpatel/RagFlowPro), replaces ChromaDB with pgvector on Postgres, moves memory to Postgres, computes hybrid retrieval in a single SQL query, streams answers, and adds a measurable evaluation harness.
+The next implementation up, [RagFlowPro](https://github.com/mlvpatel/RagFlowPro), replaces ChromaDB with pgvector on Postgres, moves memory to Postgres, computes hybrid retrieval in a single SQL query, streams answers, and adds a measurable evaluation harness.
 
-Every rung is measured on the same golden questions, keyless, in the [rag-catalog](https://github.com/mlvpatel/rag-catalog) hub.
+Every implementation is measured on the same golden questions, keyless, in the [rag-catalog](https://github.com/mlvpatel/rag-catalog) hub.
 
 ## License
 

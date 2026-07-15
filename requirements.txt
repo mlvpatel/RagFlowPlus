@@ -1,4 +1,4 @@
-# RAGFlow Requirements
+# rag-advanced-2023 Requirements
 # Author: Malav Patel
 # Last Updated: March 2026
 

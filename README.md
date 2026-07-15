@@ -1,16 +1,16 @@
-# RagFlowPlus
+# rag-advanced-2023
 
 **Advanced retrieval augmented generation for question answering over your own documents, with hybrid retrieval and cross encoder reranking.**
 
-**Part of the RagFlow line, a series of reference enterprise RAG implementations. This repository is RagFlowPlus, Advanced RAG.** See [the full line](#the-ragflow-line) below.
+**Part of the RAG line, a series of reference enterprise RAG implementations. This repository is rag-advanced-2023, Advanced RAG.** See [the full line](#the-rag_naive-line) below.
 
-RagFlowPlus lets you upload documents and ask questions about them. It retrieves the relevant passages with hybrid dense and keyword search, reranks them with a cross encoder, sends the best context to a language model, and returns a grounded answer while remembering the conversation. It runs on FastAPI with a Streamlit chat interface and packages the whole stack with Docker.
+rag-advanced-2023 lets you upload documents and ask questions about them. It retrieves the relevant passages with hybrid dense and keyword search, reranks them with a cross encoder, sends the best context to a language model, and returns a grounded answer while remembering the conversation. It runs on FastAPI with a Streamlit chat interface and packages the whole stack with Docker.
 
-[![CI](https://github.com/mlvpatel/RagFlowPlus/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/mlvpatel/RagFlowPlus/actions/workflows/ci-cd.yml) ![Python](https://img.shields.io/badge/python-3.11-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-async-green) ![License](https://img.shields.io/badge/license-MIT-green)
+[![CI](https://github.com/mlvpatel/rag-advanced-2023/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/mlvpatel/rag-advanced-2023/actions/workflows/ci-cd.yml) ![Python](https://img.shields.io/badge/python-3.11-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-async-green) ![License](https://img.shields.io/badge/license-MIT-green)
 
-![RagFlowPlus answering a document question live on a local model](assets/videos/ragflowplus-demo.gif)
+![rag-advanced-2023 answering a document question live on a local model](assets/videos/rag_advanced-demo.gif)
 
-The clip above is a live, unedited run on a local llama3.2 model with the bundled sample data, including a real SEC 10-K, indexed in Chroma. No paid keys were used. Full recording at [assets/videos/ragflowplus-demo.webm](assets/videos/ragflowplus-demo.webm), screenshot at [assets/screenshots/ragflowplus-ui.png](assets/screenshots/ragflowplus-ui.png).
+The clip above is a live, unedited run on a local llama3.2 model with the bundled sample data, including a real SEC 10-K, indexed in Chroma. No paid keys were used. Full recording at [assets/videos/rag_advanced-demo.webm](assets/videos/rag_advanced-demo.webm), screenshot at [assets/screenshots/rag_advanced-ui.png](assets/screenshots/rag_advanced-ui.png).
 
 ## Try it with the bundled sample data
 
@@ -109,21 +109,19 @@ Settings come from environment variables (see `.env.example`).
 
 Python, FastAPI, Streamlit, LangChain, ChromaDB, SQLite, Celery, Redis, Prometheus, and Docker. Embeddings use Google text-embedding-004.
 
-## The RagFlow line
+## The RAG line
 
-RagFlowPlus is one implementation in the RagFlow line, a series demonstrating distinct enterprise RAG retrieval strategies.
+rag-advanced-2023 is one implementation in the RAG line, a series demonstrating distinct enterprise RAG retrieval strategies.
 
 | Year | Repository | Generation |
 |---|---|---|
-| 2022 | [RagFlow](https://github.com/mlvpatel/RagFlow) | Naive RAG, single dense retrieval |
-| 2023 | RagFlowPlus, this repo | Advanced RAG, hybrid retrieval and reranking |
-| 2024 | [RagFlowPro](https://github.com/mlvpatel/RagFlowPro) | Modular production RAG, pgvector, streaming, evaluation |
-| 2025 | [RagFlowProPlus](https://github.com/mlvpatel/RagFlowProPlus), RagFlowKAG | Agentic RAG, knowledge graph with reasoning |
-| 2026 | [RagFlowProMax](https://github.com/mlvpatel/RagFlowProMax), UltimateRAG | Multi agent enterprise, multimodal |
+| 2022 | [rag-naive-2022](https://github.com/mlvpatel/rag-naive-2022) | Naive RAG, single dense retrieval |
+| 2023 | rag-advanced-2023, this repo | Advanced RAG, hybrid retrieval and reranking |
+| 2024 | [rag-modular-2023](https://github.com/mlvpatel/rag-modular-2023) | Modular production RAG, pgvector, streaming, evaluation |
+| 2025 | [rag-agentic-2025](https://github.com/mlvpatel/rag-agentic-2025), rag-graph-2024 | Agentic RAG, knowledge graph with reasoning |
+| 2026 | [rag-multiagent-2026](https://github.com/mlvpatel/rag-multiagent-2026), rag-multimodal-2026 | Multi agent enterprise, multimodal |
 
-The next implementation up, [RagFlowPro](https://github.com/mlvpatel/RagFlowPro), replaces ChromaDB with pgvector on Postgres, moves memory to Postgres, computes hybrid retrieval in a single SQL query, streams answers, and adds a measurable evaluation harness.
-
-Every implementation is measured on the same golden questions, keyless, in the [rag-catalog](https://github.com/mlvpatel/rag-catalog) hub.
+The next implementation up, [rag-modular-2023](https://github.com/mlvpatel/rag-modular-2023), replaces ChromaDB with pgvector on Postgres, moves memory to Postgres, computes hybrid retrieval in a single SQL query, streams answers, and adds a measurable evaluation harness.
 
 ## License
 

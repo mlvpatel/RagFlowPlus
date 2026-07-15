@@ -1,6 +1,6 @@
 # Sample data
 
-Three sample documents so anyone can run RagFlowPlus and judge its performance
+Three sample documents so anyone can run rag-advanced-2023 and judge its performance
 without supplying their own files. Two are small hand written business documents,
 one is a real public SEC filing, so you can see it work on both clean text and a
 dense real world document.
@@ -39,8 +39,8 @@ NVIDIA 10-K:
 Honesty check (not in any document):
 - What is Acme's parental leave policy? (it should say the documents do not cover this)
 
-## What RagFlowPlus adds over the naive baseline
+## What rag-advanced-2023 adds over the naive baseline
 
-RagFlowPlus is the 2023 Advanced rung. Unlike the naive RagFlow, it fuses dense
+rag-advanced-2023 is the 2023 Advanced rung. Unlike the naive rag-naive-2022, it fuses dense
 and BM25 keyword search with Reciprocal Rank Fusion and reranks the result with a
 cross encoder, so answers to harder questions are better grounded.

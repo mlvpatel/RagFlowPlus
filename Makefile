@@ -1,4 +1,4 @@
-# RAGFlow Makefile — developer convenience commands
+# rag-advanced-2023 Makefile, developer convenience commands
 # Author: Malav Patel
 # Usage: make <target>
 
@@ -12,7 +12,7 @@ APP    := src.api.main:app
 # ── default ───────────────────────────────────────────────────────────────────
 help:
 	@echo ""
-	@echo "RAGFlow — available make targets:"
+	@echo "rag-advanced-2023, available make targets:"
 	@echo ""
 	@echo "  install       Install all dependencies"
 	@echo "  dev           Start the FastAPI dev server (hot reload)"
@@ -66,7 +66,7 @@ clean:
 
 # ── docker ────────────────────────────────────────────────────────────────────
 docker-build:
-	docker build -f docker/Dockerfile -t ragflow:latest .
+	docker build -f docker/Dockerfile -t rag_naive:latest .
 
 docker-up:
 	docker-compose -f docker/docker-compose.yml up --build -d

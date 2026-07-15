@@ -1,5 +1,5 @@
 """
-RAGFlow Streamlit App entry point.
+rag-advanced-2023 Streamlit App entry point.
 Author: Malav Patel
 """
 
@@ -13,12 +13,12 @@ from frontend.chat_interface import display_chat_interface
 from frontend.sidebar import display_sidebar
 
 st.set_page_config(
-    page_title="RagFlowPlus, AI Document Chat",
+    page_title="rag-advanced-2023, AI Document Chat",
     page_icon="🔍",
     layout="wide",
 )
 
-st.title("🔍 RagFlowPlus, Chat with Your Documents")
+st.title("🔍 rag-advanced-2023, Chat with Your Documents")
 st.caption("Advanced RAG, 2023. Hybrid retrieval with cross encoder reranking.")
 
 # ── Initialise session state defaults ─────────────────────────────────────

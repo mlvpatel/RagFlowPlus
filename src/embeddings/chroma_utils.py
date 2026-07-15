@@ -74,7 +74,7 @@ if chroma_host:
     client = chromadb.HttpClient(host=chroma_host, port=int(chroma_port))
     vectorstore = Chroma(
         client=client,
-        collection_name="ragflow_collection",
+        collection_name="rag_naive_collection",
         embedding_function=embedding_function,
     )
     logger.info(f"ChromaDB connected to HTTP server: {chroma_host}:{chroma_port}")

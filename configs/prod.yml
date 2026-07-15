@@ -1,4 +1,4 @@
-# RAGFlow Production Configuration
+# rag-advanced-2023 Production Configuration
 # Environment: production (Docker Compose / Kubernetes)
 
 log_level: INFO
@@ -16,7 +16,7 @@ rag:
 chroma:
   host: chromadb       # Docker service name
   port: 8000
-  collection_name: ragflow_collection
+  collection_name: rag_naive_collection
 
 embedding:
   model: models/text-embedding-004

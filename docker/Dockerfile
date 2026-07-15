@@ -1,4 +1,4 @@
-# RAGFlow Dockerfile
+# rag-advanced-2023 Dockerfile
 # Author: Malav Patel
 # Multi-stage build for production deployment
 

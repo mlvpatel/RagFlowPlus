@@ -1,5 +1,5 @@
 """
-RAGFlow: Production-Grade RAG System with Conversational Memory
+rag-advanced-2023: Production-Grade RAG System with Conversational Memory
 
 Author: Malav Patel
 """

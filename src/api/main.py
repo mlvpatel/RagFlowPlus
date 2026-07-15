@@ -1,5 +1,5 @@
 """
-RAGFlow API Server, v1
+rag-advanced-2023 API Server, v1
 
 Author: Malav Patel
 """
@@ -42,7 +42,7 @@ configure_logging()
 # App & Middleware
 # ============================================
 app = FastAPI(
-    title="RAGFlow API",
+    title="rag-advanced-2023 API",
     description="Production-grade RAG System with Conversational Memory",
     version="1.0.0",
     docs_url="/docs",

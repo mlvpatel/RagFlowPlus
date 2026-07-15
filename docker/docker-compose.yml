@@ -1,4 +1,4 @@
-# RAGFlow Docker Compose
+# rag-advanced-2023 Docker Compose
 # Author: Malav Patel
 # Run: docker compose -f docker/docker-compose.yml up --build -d
 
@@ -10,8 +10,8 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-    image: ragflow:latest
-    container_name: ragflow-api
+    image: rag_naive:latest
+    container_name: rag_naive-api
     restart: unless-stopped
     ports:
       - "8000:8000"
@@ -48,7 +48,7 @@ services:
           cpus: "1.0"
           memory: 2G
     networks:
-      - ragflow-network
+      - rag_naive-network
 
   # ============================================
   # Streamlit UI
@@ -57,8 +57,8 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-    image: ragflow:latest
-    container_name: ragflow-streamlit
+    image: rag_naive:latest
+    container_name: rag_naive-streamlit
     restart: unless-stopped
     command: ["streamlit", "run", "frontend/streamlit_app.py", "--server.port", "8501", "--server.address", "0.0.0.0"]
     ports:
@@ -77,14 +77,14 @@ services:
           cpus: "0.5"
           memory: 512M
     networks:
-      - ragflow-network
+      - rag_naive-network
 
   # ============================================
   # Redis (for caching)
   # ============================================
   redis:
     image: redis:7.4-alpine
-    container_name: ragflow-redis
+    container_name: rag_naive-redis
     restart: unless-stopped
     command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
     ports:
@@ -102,14 +102,14 @@ services:
           cpus: "0.5"
           memory: 512M
     networks:
-      - ragflow-network
+      - rag_naive-network
 
   # ============================================
   # ChromaDB (Vector Store)
   # ============================================
   chromadb:
     image: chromadb/chroma:0.6.3
-    container_name: ragflow-chroma
+    container_name: rag_naive-chroma
     restart: unless-stopped
     volumes:
       - chroma-data:/chroma/chroma
@@ -124,7 +124,7 @@ services:
           cpus: "1.0"
           memory: 1G
     networks:
-      - ragflow-network
+      - rag_naive-network
 
   # ============================================
   # Celery Worker
@@ -133,8 +133,8 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-    image: ragflow:latest
-    container_name: ragflow-worker
+    image: rag_naive:latest
+    container_name: rag_naive-worker
     restart: unless-stopped
     command: celery -A src.worker.celery_app worker --loglevel=info --concurrency=2
     environment:
@@ -159,10 +159,10 @@ services:
           cpus: "1.0"
           memory: 2G
     networks:
-      - ragflow-network
+      - rag_naive-network
 
 networks:
-  ragflow-network:
+  rag_naive-network:
     driver: bridge
 
 volumes:

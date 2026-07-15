@@ -1,4 +1,4 @@
-"""Load the bundled sample documents into RagFlowPlus.
+"""Load the bundled sample documents into rag-advanced-2023.
 
 For a fully local, keyless run with Ollama:
 

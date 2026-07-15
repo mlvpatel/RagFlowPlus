@@ -23,3 +23,17 @@ def mock_documents():
         Document(page_content="Carrot is a vegetable", metadata={"category": "veg"}),
         Document(page_content="Banana is yellow", metadata={"category": "fruit"}),
     ]
+
+
+@pytest.fixture(autouse=True)
+def _reset_rate_limiter():
+    """The limiter is Redis-backed, so its counters outlive a test (and even a
+    run). Without this, any test that fires enough requests starves every
+    later test of the same endpoint with 429s."""
+    from src.core.security import limiter
+
+    try:
+        limiter.reset()
+    except Exception:
+        pass
+    yield

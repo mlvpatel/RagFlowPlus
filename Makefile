@@ -66,7 +66,7 @@ clean:
 
 # ── docker ────────────────────────────────────────────────────────────────────
 docker-build:
-	docker build -f docker/Dockerfile -t rag_naive:latest .
+	docker build -f docker/Dockerfile -t rag_advanced:latest .
 
 docker-up:
 	docker-compose -f docker/docker-compose.yml up --build -d

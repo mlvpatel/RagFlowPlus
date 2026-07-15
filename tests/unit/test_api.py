@@ -44,14 +44,14 @@ def make_app():
 
 @pytest.fixture()
 def client():
-    """Return a fresh TestClient for each test."""
+    """Return a fresh TestClient for each test.
+
+    The embedder, vector store, and cross-encoder are all constructed lazily at
+    call time, so importing the app needs no vector-side patches at all.
+    """
     with (
         patch("src.api.db_utils.create_application_logs"),
         patch("src.api.db_utils.create_document_store"),
-        patch("src.embeddings.chroma_utils.vectorstore"),
-        patch("src.embeddings.chroma_utils.query_embedding_function"),
-        patch("src.core.langchain_utils._base_retriever"),
-        patch("src.core.langchain_utils._get_cross_encoder"),
     ):
         from src.api.main import app
 
@@ -63,10 +63,15 @@ def client():
 
 class TestHealth:
     def test_health_returns_200(self, client):
-        """Health endpoint must always be reachable, no auth required."""
-        resp = client.get("/health")
+        """Health endpoint must always be reachable and report per-dependency
+        state. With the probes mocked ok, the overall status is healthy."""
+        store = MagicMock()
+        with patch("src.embeddings.chroma_utils.get_vectorstore", return_value=store):
+            resp = client.get("/health")
         assert resp.status_code == 200
-        assert resp.json()["status"] == "healthy"
+        body = resp.json()
+        assert set(body["dependencies"]) == {"chroma", "redis"}
+        assert body["dependencies"]["chroma"] == "ok"
 
     def test_health_contains_version(self, client):
         resp = client.get("/health")

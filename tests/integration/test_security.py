@@ -4,24 +4,13 @@ Updated to use /v1/ route prefix.
 Author: Malav Patel
 """
 
-import sys
 from unittest.mock import MagicMock, patch
-
-# Stub heavy modules to avoid environment/version issues in CI
-sys.modules.setdefault("src.core.langchain_utils", MagicMock())
-sys.modules.setdefault("langchain", MagicMock())
-sys.modules.setdefault("langchain.chains", MagicMock())
-sys.modules.setdefault("langchain_community", MagicMock())
-sys.modules.setdefault("langchain_openai", MagicMock())
-sys.modules.setdefault("chromadb", MagicMock())
-sys.modules.setdefault("src.embeddings.chroma_utils", MagicMock())
-sys.modules.setdefault("langchain_google_genai", MagicMock())
-sys.modules.setdefault("prometheus_fastapi_instrumentator", MagicMock())
 
 import pytest
 from fastapi.testclient import TestClient
 
-# Import after stubs are registered
+# The vector stack is constructed lazily at call time, so the real app imports
+# cleanly here; sys.modules stubbing would poison other tests' imports.
 with (
     patch("src.api.db_utils.create_application_logs"),
     patch("src.api.db_utils.create_document_store"),

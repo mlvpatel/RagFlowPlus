@@ -14,12 +14,11 @@ import streamlit as st
 
 # ── configuration ────────────────────────────────────────────────────────────
 API_URL = os.getenv("API_URL", "http://localhost:8000")
-API_KEY = os.getenv("API_KEY", "")
 
 
 def _headers(json: bool = False) -> dict:
-    """Build headers with optional API key and Content-Type."""
-    h = {"X-API-Key": API_KEY} if API_KEY else {}
+    """Build request headers."""
+    h: dict = {}
     if json:
         h["Content-Type"] = "application/json"
         h["accept"] = "application/json"

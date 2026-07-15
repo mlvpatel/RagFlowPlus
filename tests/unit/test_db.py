@@ -103,16 +103,19 @@ class TestDocumentStore:
         rows = db_conn.execute("SELECT * FROM document_store WHERE id = ?", (file_id,)).fetchall()
         assert len(rows) == 0
 
-    def test_get_all_documents_ordered_by_timestamp(self, db_conn):
-        """Documents should be returned newest-first."""
-        db_conn.execute("INSERT INTO document_store (filename) VALUES (?)", ("old.pdf",))
-        db_conn.execute("INSERT INTO document_store (filename) VALUES (?)", ("new.pdf",))
-        db_conn.commit()
+    def test_get_all_documents_newest_first(self, tmp_path, monkeypatch):
+        """The real get_all_documents returns newest-first even for uploads
+        landing in the same second (id order, not the second-granular timestamp)."""
+        import src.api.db_utils as db
 
-        rows = db_conn.execute(
-            "SELECT filename FROM document_store ORDER BY upload_timestamp DESC"
-        ).fetchall()
+        monkeypatch.setattr(db, "DB_NAME", str(tmp_path / "docs.db"))
+        db.create_document_store()
+        db.insert_document_record("old.pdf")
+        db.insert_document_record("new.pdf")
+
+        rows = db.get_all_documents()
         assert rows[0]["filename"] == "new.pdf"
+        assert rows[1]["filename"] == "old.pdf"
 
 
 # ── application log tests ──────────────────────────────────────────────────────
@@ -164,3 +167,19 @@ class TestApplicationLogs:
         ).fetchall()
         assert len(alpha_rows) == 1
         assert alpha_rows[0]["session_id"] == "alpha"
+
+
+def test_get_chat_history_windowed_to_recent_turns(tmp_path, monkeypatch):
+    """History is capped: with 25 stored turns and the default limit of 20,
+    the oldest 5 must be dropped and order stays oldest-first."""
+    import src.api.db_utils as db
+
+    monkeypatch.setattr(db, "DB_NAME", str(tmp_path / "chat.db"))
+    db.create_application_logs()
+    for i in range(25):
+        db.insert_application_logs("s1", f"q{i}", f"a{i}", "gpt-4o-mini")
+
+    messages = db.get_chat_history("s1")
+    assert len(messages) == 40
+    assert messages[0] == {"role": "human", "content": "q5"}
+    assert messages[-1] == {"role": "ai", "content": "a24"}

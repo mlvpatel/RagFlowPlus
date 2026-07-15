@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import datetime
+import functools
 import logging
 import os
 from typing import List
@@ -58,33 +59,48 @@ def _build_embeddings(task_type: str):
     )
 
 
-embedding_function = _build_embeddings("retrieval_document")
-# Query-time embedding (different task type for better retrieval accuracy)
-query_embedding_function = _build_embeddings("retrieval_query")
+# Lazy on purpose: constructing the Google embedder validates the API key, so
+# building it at import time makes the whole package unimportable on a machine
+# without keys. Everything that needs vectors asks for them at call time.
+@functools.lru_cache(maxsize=1)
+def get_embedding_function():
+    """Index-time embedder (retrieval_document task type)."""
+    return _build_embeddings("retrieval_document")
+
+
+@functools.lru_cache(maxsize=1)
+def get_query_embedding_function():
+    """Query-time embedder (retrieval_query task type)."""
+    return _build_embeddings("retrieval_query")
+
 
 # ============================================
 # ChromaDB, HTTP client-server (Docker) or local persistence (dev)
 # ============================================
-chroma_host = os.getenv("CHROMA_HOST")
-chroma_port = os.getenv("CHROMA_PORT", "8000")
+@functools.lru_cache(maxsize=1)
+def get_vectorstore() -> Chroma:
+    chroma_host = os.getenv("CHROMA_HOST")
+    chroma_port = os.getenv("CHROMA_PORT", "8000")
 
-if chroma_host:
-    import chromadb
+    if chroma_host:
+        import chromadb
 
-    client = chromadb.HttpClient(host=chroma_host, port=int(chroma_port))
-    vectorstore = Chroma(
-        client=client,
-        collection_name="rag_naive_collection",
-        embedding_function=embedding_function,
-    )
-    logger.info(f"ChromaDB connected to HTTP server: {chroma_host}:{chroma_port}")
-else:
+        client = chromadb.HttpClient(host=chroma_host, port=int(chroma_port))
+        store = Chroma(
+            client=client,
+            collection_name="rag_advanced_collection",
+            embedding_function=get_embedding_function(),
+        )
+        logger.info(f"ChromaDB connected to HTTP server: {chroma_host}:{chroma_port}")
+        return store
+
     persist_dir = os.getenv("CHROMA_PERSIST_DIR", "./chroma_db")
-    vectorstore = Chroma(
+    store = Chroma(
         persist_directory=persist_dir,
-        embedding_function=embedding_function,
+        embedding_function=get_embedding_function(),
     )
     logger.info(f"ChromaDB using local persistence: {persist_dir}")
+    return store
 
 
 # ============================================
@@ -126,7 +142,7 @@ def index_document_to_chroma(file_path: str, file_id: int) -> bool:
             split.metadata["filename"] = os.path.basename(file_path)
             split.metadata["indexed_at"] = timestamp
 
-        vectorstore.add_documents(splits)
+        get_vectorstore().add_documents(splits)
         logger.info(
             f"Indexed {len(splits)} chunks for file_id={file_id} ({os.path.basename(file_path)})"
         )
@@ -139,12 +155,12 @@ def index_document_to_chroma(file_path: str, file_id: int) -> bool:
 def delete_doc_from_chroma(file_id: int) -> bool:
     """Delete all Chroma chunks associated with a file_id using the public API."""
     try:
-        docs = vectorstore.get(where={"file_id": file_id})
+        docs = get_vectorstore().get(where={"file_id": file_id})
         ids_to_delete = docs["ids"]
         logger.info(f"Found {len(ids_to_delete)} chunks for file_id {file_id}")
 
         if ids_to_delete:
-            vectorstore.delete(ids=ids_to_delete)  # ✅ stable public API
+            get_vectorstore().delete(ids=ids_to_delete)
             logger.info(f"Deleted {len(ids_to_delete)} chunks for file_id {file_id}")
 
         return True

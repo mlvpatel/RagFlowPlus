@@ -14,14 +14,11 @@ from fastapi.testclient import TestClient
 
 @pytest.fixture(scope="module")
 def client():
-    """Module-scoped client, patches applied for all tests in this file."""
+    """Module-scoped client. The vector stack is lazy, so importing the app
+    only needs the two DB side effects silenced."""
     with (
         patch("src.api.db_utils.create_application_logs"),
         patch("src.api.db_utils.create_document_store"),
-        patch("src.embeddings.chroma_utils.GoogleGenerativeAIEmbeddings"),
-        patch("src.embeddings.chroma_utils.Chroma"),
-        patch("src.core.langchain_utils._base_retriever"),
-        patch("src.core.langchain_utils._get_cross_encoder"),
     ):
         from src.api.main import app
 
@@ -37,10 +34,14 @@ def mock_upload_file(tmp_path):
 
 
 def test_health_check(client):
-    """Test /health endpoint, no auth required."""
-    response = client.get("/health")
+    """The health endpoint answers 200 and reports each dependency; it must
+    not require live vector infrastructure to respond."""
+    with patch("src.embeddings.chroma_utils.get_vectorstore", return_value=MagicMock()):
+        response = client.get("/health")
     assert response.status_code == 200
-    assert response.json()["status"] == "healthy"
+    body = response.json()
+    assert body["status"] in ("healthy", "degraded")
+    assert body["dependencies"]["chroma"] == "ok"
 
 
 @patch("src.api.main.get_chat_history", return_value=[])

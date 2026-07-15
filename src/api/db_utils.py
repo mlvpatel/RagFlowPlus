@@ -65,12 +65,19 @@ def insert_application_logs(session_id: str, user_query: str, gpt_response: str,
         )
 
 
-def get_chat_history(session_id: str) -> list:
+def get_chat_history(session_id: str, limit: int = 20) -> list:
+    """Return the LAST `limit` turns, oldest first.
+
+    Unbounded history grows the prompt with every turn of a long session, so
+    the window is capped; the newest turns matter most for reformulation.
+    """
     with get_db_connection() as conn:
         cursor = conn.execute(
-            "SELECT user_query, gpt_response FROM application_logs "
-            "WHERE session_id = ? ORDER BY created_at",
-            (session_id,),
+            "SELECT user_query, gpt_response FROM ("
+            "  SELECT id, user_query, gpt_response FROM application_logs"
+            "  WHERE session_id = ? ORDER BY id DESC LIMIT ?"
+            ") ORDER BY id",
+            (session_id, limit),
         )
         messages = []
         for row in cursor.fetchall():
@@ -102,8 +109,10 @@ def delete_document_record(file_id: int) -> bool:
 
 def get_all_documents() -> list:
     with get_db_connection() as conn:
+        # Ordered by id, not timestamp: CURRENT_TIMESTAMP has second granularity,
+        # so two uploads in the same second tie and the order flaps.
         cursor = conn.execute(
-            "SELECT id, filename, upload_timestamp FROM document_store ORDER BY upload_timestamp DESC"
+            "SELECT id, filename, upload_timestamp FROM document_store ORDER BY id DESC"
         )
         return [dict(row) for row in cursor.fetchall()]
 

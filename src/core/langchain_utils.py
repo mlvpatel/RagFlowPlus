@@ -22,15 +22,10 @@ from langchain_openai import ChatOpenAI
 # Add src to path to allow relative imports when run directly
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from embeddings.chroma_utils import query_embedding_function, vectorstore
+from embeddings.chroma_utils import get_vectorstore
 from retrieval.retrievers import ReRankingRetriever, VectorRetriever
 
 logger = logging.getLogger(__name__)
-
-# ============================================
-# Base retriever, vector similarity (k=5 for good recall)
-# ============================================
-_base_retriever = VectorRetriever(vectorstore=vectorstore, k=5)
 
 output_parser = StrOutputParser()
 
@@ -84,9 +79,14 @@ def _get_cross_encoder():
 
 
 def _get_final_retriever() -> ReRankingRetriever:
-    """Build the reranking retriever with lazily-loaded CrossEncoder."""
+    """Build the reranking retriever with lazily-loaded CrossEncoder.
+
+    Base k=10 on purpose: the cross-encoder keeps top_n=5, and a reranker over
+    exactly top_n candidates can only reorder, not rescue. Twice the final cut
+    gives it real recall to work with.
+    """
     return ReRankingRetriever(
-        base_retriever=_base_retriever,
+        base_retriever=VectorRetriever(vectorstore=get_vectorstore(), k=10),
         cross_encoder_model=_get_cross_encoder(),
         top_n=5,
     )

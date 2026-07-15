@@ -10,23 +10,23 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-    image: rag_naive:latest
-    container_name: rag_naive-api
+    image: rag_advanced:latest
+    container_name: rag_advanced-api
     restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
     volumes:
       - ../data:/app/data
       - ../logs:/app/logs
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
       - LANGSMITH_API_KEY=${LANGSMITH_API_KEY:-}
       - CHROMA_HOST=chromadb
       - CHROMA_PORT=8000
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
-      - API_KEY=${API_KEY}
       - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:8501}
       - LOG_LEVEL=INFO
     depends_on:
@@ -48,7 +48,7 @@ services:
           cpus: "1.0"
           memory: 2G
     networks:
-      - rag_naive-network
+      - rag_advanced-network
 
   # ============================================
   # Streamlit UI
@@ -57,15 +57,14 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-    image: rag_naive:latest
-    container_name: rag_naive-streamlit
+    image: rag_advanced:latest
+    container_name: rag_advanced-streamlit
     restart: unless-stopped
     command: ["streamlit", "run", "frontend/streamlit_app.py", "--server.port", "8501", "--server.address", "0.0.0.0"]
     ports:
-      - "8501:8501"
+      - "127.0.0.1:8501:8501"
     environment:
       - API_URL=http://api:8000
-      - API_KEY=${API_KEY}
     depends_on:
       api:
         condition: service_healthy
@@ -77,18 +76,18 @@ services:
           cpus: "0.5"
           memory: 512M
     networks:
-      - rag_naive-network
+      - rag_advanced-network
 
   # ============================================
   # Redis (for caching)
   # ============================================
   redis:
     image: redis:7.4-alpine
-    container_name: rag_naive-redis
+    container_name: rag_advanced-redis
     restart: unless-stopped
     command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
     ports:
-      - "6379:6379"
+      - "127.0.0.1:6379:6379"
     volumes:
       - redis-data:/data
     healthcheck:
@@ -102,14 +101,14 @@ services:
           cpus: "0.5"
           memory: 512M
     networks:
-      - rag_naive-network
+      - rag_advanced-network
 
   # ============================================
   # ChromaDB (Vector Store)
   # ============================================
   chromadb:
     image: chromadb/chroma:0.6.3
-    container_name: rag_naive-chroma
+    container_name: rag_advanced-chroma
     restart: unless-stopped
     volumes:
       - chroma-data:/chroma/chroma
@@ -117,14 +116,14 @@ services:
       - IS_PERSISTENT=TRUE
       - ANONYMIZED_TELEMETRY=FALSE
     ports:
-      - "8001:8000"
+      - "127.0.0.1:8001:8000"
     deploy:
       resources:
         limits:
           cpus: "1.0"
           memory: 1G
     networks:
-      - rag_naive-network
+      - rag_advanced-network
 
   # ============================================
   # Celery Worker
@@ -133,8 +132,8 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-    image: rag_naive:latest
-    container_name: rag_naive-worker
+    image: rag_advanced:latest
+    container_name: rag_advanced-worker
     restart: unless-stopped
     command: celery -A src.worker.celery_app worker --loglevel=info --concurrency=2
     environment:
@@ -142,6 +141,7 @@ services:
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
       - CHROMA_HOST=chromadb
       - CHROMA_PORT=8000
     depends_on:
@@ -159,10 +159,10 @@ services:
           cpus: "1.0"
           memory: 2G
     networks:
-      - rag_naive-network
+      - rag_advanced-network
 
 networks:
-  rag_naive-network:
+  rag_advanced-network:
     driver: bridge
 
 volumes:

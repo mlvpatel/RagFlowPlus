@@ -10,12 +10,11 @@ load_dotenv()
 
 import logging
 import os
-import shutil
 import uuid
 
 import structlog
 from celery.result import AsyncResult
-from fastapi import APIRouter, Depends, FastAPI, File, HTTPException, Request, UploadFile
+from fastapi import APIRouter, FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
 from slowapi import _rate_limit_exceeded_handler
@@ -26,12 +25,11 @@ from src.api.db_utils import (
     get_all_documents,
     get_chat_history,
     insert_application_logs,
-    insert_document_record,
 )
 from src.api.pydantic_models import DeleteFileRequest, DocumentInfo, QueryInput, QueryResponse
 from src.core.langchain_utils import get_rag_chain
 from src.core.logging_config import configure_logging, logger
-from src.core.security import limiter, verify_api_key
+from src.core.security import limiter
 from src.embeddings.chroma_utils import delete_doc_from_chroma, index_document_to_chroma
 from src.worker.celery_app import celery_app
 from src.worker.tasks import process_document
@@ -98,13 +96,13 @@ def health_check():
     """Deep liveness probe, checks Chroma and Redis connectivity."""
     import redis as redis_lib
 
-    from src.embeddings.chroma_utils import vectorstore
+    from src.embeddings.chroma_utils import get_vectorstore
 
     checks: dict[str, str] = {}
 
     # ── Chroma ────────────────────────────────────────────────────────────
     try:
-        vectorstore.get(limit=1)  # lightweight probe
+        get_vectorstore().get(limit=1)  # lightweight probe
         checks["chroma"] = "ok"
     except Exception as e:
         checks["chroma"] = f"error: {e}"
@@ -125,7 +123,24 @@ def health_check():
 # ============================================
 # v1 Router, all business routes
 # ============================================
-v1 = APIRouter(prefix="/v1", dependencies=[Depends(verify_api_key)])
+v1 = APIRouter(prefix="/v1")
+
+_MAX_UPLOAD_MB = int(os.getenv("MAX_UPLOAD_MB", "25"))
+_COPY_CHUNK = 1024 * 1024
+
+
+def _copy_capped(src, dst, limit: int) -> None:
+    """Stream an upload to disk, stopping the moment it passes the cap.
+
+    Trusting Content-Length would trust the client, and measuring after the
+    copy means the disk already took the hit, so count while writing.
+    """
+    total = 0
+    while chunk := src.read(_COPY_CHUNK):
+        total += len(chunk)
+        if total > limit:
+            raise HTTPException(status_code=413, detail="File too large")
+        dst.write(chunk)
 
 
 @v1.post("/chat", response_model=QueryResponse, tags=["Chat"])
@@ -168,7 +183,7 @@ async def upload_and_index_document(request: Request, file: UploadFile = File(..
 
     try:
         with open(file_path, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
+            _copy_capped(file.file, buffer, _MAX_UPLOAD_MB * 1024 * 1024)
 
         task = process_document.delay(file_path, file.filename)
         logger.info("upload_queued", filename=file.filename, task_id=task.id)

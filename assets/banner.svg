@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-label="RagChatBot, Advanced RAG">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#111827"/>
+      <stop offset="1" stop-color="#1e1b4b"/>
+    </linearGradient>
+    <linearGradient id="ac" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#818cf8"/>
+      <stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="360" rx="18" fill="url(#bg)"/>
+  <rect x="1.5" y="1.5" width="1197" height="357" rx="17" fill="none" stroke="#818cf8" stroke-opacity="0.25" stroke-width="3"/>
+
+  <!-- title block -->
+  <rect x="64" y="74" width="56" height="10" rx="5" fill="url(#ac)"/>
+  <text x="64" y="146" font-family="Helvetica, Arial, sans-serif" font-size="64" font-weight="700" fill="#f8fafc">RagChatBot</text>
+  <text x="64" y="196" font-family="Helvetica, Arial, sans-serif" font-size="30" font-weight="600" fill="#818cf8">Advanced RAG</text>
+  <text x="64" y="232" font-family="Helvetica, Arial, sans-serif" font-size="19" fill="#cbd5e1">hybrid dense plus BM25, fused, reranked</text>
+  <rect x="64" y="258" width="196.5" height="34" rx="17" fill="#f8fafc" fill-opacity="0.08" stroke="#818cf8" stroke-opacity="0.5"/>
+  <text x="162.25" y="281" font-family="ui-monospace, Menlo, monospace" font-size="17" fill="#22d3ee" text-anchor="middle">rag-advanced-2023</text>
+
+  <!-- year badge -->
+  <rect x="1066" y="34" width="70" height="32" rx="16" fill="#818cf8" fill-opacity="0.16" stroke="#818cf8" stroke-opacity="0.55"/>
+  <text x="1101" y="56" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="600" fill="#22d3ee" text-anchor="middle">2023</text>
+
+  <!-- motif -->
+  
+  <g fill="none" stroke-linecap="round">
+    <path d="M700 120 C 780 120 800 165 880 172" stroke="#818cf8" stroke-width="6"/>
+    <path d="M700 240 C 780 240 800 195 880 188" stroke="#22d3ee" stroke-width="6"/>
+    <text x="700" y="104" font-family="Helvetica, Arial, sans-serif" font-size="16" fill="#818cf8" stroke="none">dense</text>
+    <text x="700" y="270" font-family="Helvetica, Arial, sans-serif" font-size="16" fill="#22d3ee" stroke="none">BM25</text>
+    <path d="M890 140 L1010 140 L980 220 L920 220 Z" fill="#f8fafc" fill-opacity="0.07" stroke="url(#ac)" stroke-width="4"/>
+    <text x="950" y="186" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="600" fill="#e2e8f0" stroke="none" text-anchor="middle">RRF</text>
+    <line x1="950" y1="224" x2="950" y2="252" stroke="#22d3ee" stroke-width="5"/>
+    <rect x="1035" y="118" width="110" height="24" rx="7" fill="#818cf8" opacity="0.95"/>
+    <rect x="1035" y="152" width="92" height="24" rx="7" fill="#818cf8" opacity="0.65"/>
+    <rect x="1035" y="186" width="74" height="24" rx="7" fill="#818cf8" opacity="0.4"/>
+    <rect x="1035" y="220" width="56" height="24" rx="7" fill="#818cf8" opacity="0.22"/>
+  </g>
+
+  <!-- corner credit -->
+  <text x="1160" y="334" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="600" fill="#94a3b8" text-anchor="end">by <tspan fill="#22d3ee">MlvPtL</tspan></text>
+</svg>
